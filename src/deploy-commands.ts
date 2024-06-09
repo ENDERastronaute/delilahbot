@@ -14,7 +14,7 @@ export default async () => {
         const commandFiles = await Files.getFilesByExtension(commandsPath, 'ts');
 
         for (let file of commandFiles) {
-            let { command } = await import(`./commands/${file}`);
+            let { command } = await import(`../commands/${file}`);
 
             if ('data' in command && 'execute' in command) {
                 commands.push(command.data.toJSON());

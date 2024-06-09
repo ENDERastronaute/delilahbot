@@ -8,11 +8,11 @@ import Files from './files';
 export default class Handler {
     static async loadEvents() {
         try {
-            const eventsPath = path.join(__dirname, 'events');
+            const eventsPath = path.join(__dirname, '../events');
             const eventFiles = await Files.getFilesByExtension(eventsPath, 'ts')
 
             for (const file of eventFiles) {
-                let { event } = await import(`events/${file}`);
+                let { event } = await import(`../events/${file}`);
 
                 if (event.once) {
                     client.once(event.name, (...args) => event.execute(...args));
@@ -33,7 +33,7 @@ export default class Handler {
     }
 
     static async loadCommands() {
-        const commandsPath = path.join(__dirname, 'commands');
+        const commandsPath = path.join(__dirname, '../commands');
         const commandFiles = await Files.getFilesByExtension(commandsPath, 'ts')
 
         let commandNumber = commandFiles.length;
@@ -42,7 +42,7 @@ export default class Handler {
         client.commands = new Collection();
 
         for (const file of commandFiles) {
-            let { command } = await import(`commands/${file}`);
+            let { command } = await import(`../commands/${file}`);
 
             if ('data' in command && 'execute' in command) {
                 client.commands.set(command.data.name, command);
