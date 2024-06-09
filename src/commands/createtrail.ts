@@ -1,6 +1,5 @@
 import {
     CommandInteraction, GuildMemberRoleManager,
-    Poll,
     PollAnswerData,
     PollData,
     PollQuestionMedia,
@@ -83,7 +82,7 @@ export const command = {
             if (!value) continue;
 
             answers.push({
-                text: value as string,
+                text: value as string
             })
         }
 

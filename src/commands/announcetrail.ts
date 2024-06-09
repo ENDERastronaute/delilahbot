@@ -1,10 +1,8 @@
 import {CommandInteraction, GuildMemberRoleManager, PollAnswer, SlashCommandBuilder, TextChannel} from "discord.js";
 import dayjs from "dayjs";
-import isoWeek from "dayjs/plugin/isoWeek";
 import updateLocale from "dayjs/plugin/updateLocale";
 
 dayjs.extend(updateLocale);
-dayjs.extend(isoWeek);
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -42,7 +40,7 @@ export const command = {
 
                 const date = dayjs(interaction.options.get('date')?.value as string);
 
-                const content = `Attention <@&1249309687237709884>! Une nouvelle randonnée à été organisée!\n\nElle se passera à ${selectedAnswer.text} le ${date.isoWeekday()} ${date.date()} ${date.locale('fr-CH').format('MMMM')} ${date.year()}.`;
+                const content = `Attention <@&1249309687237709884>! Une nouvelle randonnée à été organisée!\n\nElle se passera à ${selectedAnswer.text} le ${date.locale('fr-CH').format('DDDD')} ${date.date()} ${date.locale('fr-CH').format('MMMM')} ${date.year()}.`;
 
                 await news_channel.send({content: content})
 
