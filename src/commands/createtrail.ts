@@ -13,6 +13,9 @@ import {
     TextInputStyle
 } from "discord.js";
 
+import { randomBytes } from 'crypto';
+import { writeFile } from 'fs/promises';
+
 export const command = {
     data: new SlashCommandBuilder()
         .setName("createtrail")
@@ -26,7 +29,7 @@ export const command = {
         const trails_channel = await interaction.client.channels.fetch(process.env.TRAILS_CHANNEL_ID as string) as TextChannel;
 
         const modal = new ModalBuilder()
-            .setCustomId('trail_creation')
+            .setCustomId(`trail_creation`)
             .setTitle('Créer un trail')
 
         const locationsInput = new TextInputBuilder()
@@ -50,7 +53,7 @@ export const command = {
 
         await interaction.followUp({ content: 'En attente de la création du sondage...' })
 
-        const filter = (i: ModalSubmitInteraction) => i.customId === 'trail_creation';
+        const filter = (i: ModalSubmitInteraction) => i.customId === `trail_creation`;
         const modalInteraction = await interaction.awaitModalSubmit({ filter, time: 300_000 });
 
         const locationsParagraph = modalInteraction.fields.getTextInputValue('locations');
@@ -59,7 +62,12 @@ export const command = {
         const locations = locationsParagraph.split('\n');
         const specialItems = specialItemsParagraph.split('\n');
 
-        const trail
+        const trail = {
+            locations,
+            specialItems
+        }
+
+        await writeFile('./src/trails.json', JSON.stringify(trail), { encoding: 'utf-8' });
 
         const answers: PollAnswerData[] = [];
 

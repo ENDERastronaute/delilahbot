@@ -12,6 +12,7 @@ import {
 import dayjs from "dayjs";
 import 'dayjs/locale/fr-ch.js'
 import updateLocale from "dayjs/plugin/updateLocale";
+import {readFile, writeFile} from 'fs/promises';
 
 dayjs.locale('fr-ch')
 
@@ -36,6 +37,13 @@ export const command = {
         const news_channel = await interaction.client.channels.fetch(process.env.NEWS_CHANNEL_ID as string) as TextChannel;
 
         try {
+            const trail: { locations?: string[], specialItems?: string[] } = await JSON.parse(await readFile('./src/trails.json', 'utf-8'))
+
+            if (!Object.keys(trail).includes('locations')) {
+                await interaction.reply({ content: "Aucun trail n'attend d'être annoncé.", ephemeral: true })
+                return;
+            }
+
             const messages = await trails_channel.messages.fetch({limit: 50});
 
             const message = messages.at(0);
@@ -63,7 +71,17 @@ export const command = {
                     'Samedi',
                 ]
 
-                const content = `Attention <@&1249309687237709884>! Une nouvelle randonnée à été organisée!\n\nElle se passera à ${selectedAnswer.text} le ${days[date.day()]} ${date.date()} ${date.format('MMMM')} ${date.year()}.`;
+                let content = `Attention <@&1249309687237709884>! Une nouvelle randonnée à été organisée!\n\nElle se passera à **${selectedAnswer.text}** le **${days[date.day()].toLowerCase()} ${date.date()} ${date.format('MMMM')} ${date.year()}**.`;
+
+                if (trail.specialItems?.length !== 0) {
+                    content += `\n\nIl vous faudra ramener :\n`;
+
+                    trail.specialItems?.forEach(item => {
+                        content += `- ${item}\n`;
+                    })
+                }
+
+                await writeFile('./src/trails.json', '{}');
 
                 await news_channel.send({content: content})
 
