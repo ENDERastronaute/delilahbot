@@ -59,6 +59,8 @@ export const command = {
         const locations = locationsParagraph.split('\n');
         const specialItems = specialItemsParagraph.split('\n');
 
+        const trail
+
         const answers: PollAnswerData[] = [];
 
         locations.forEach(location => {
