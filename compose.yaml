@@ -1,0 +1,6 @@
+services:
+  delilahbot:
+    container_name: delilahbot-bot
+    build: .
+    volumes:
+      - ./src/:/app/src:rw

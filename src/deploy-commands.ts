@@ -26,6 +26,13 @@ export default async () => {
 
         const rest = new REST().setToken(config.DISCORD_TOKEN as string);
 
+        await rest.put(Routes.applicationGuildCommands(config.DISCORD_CLIENT_ID, config.GUILD_ID), { body: [] });
+        console.log('Successfully deleted all guild commands.');
+
+// for global commands
+        await rest.put(Routes.applicationCommands(config.DISCORD_CLIENT_ID), { body: [] });
+        console.log('Successfully deleted all application commands.');
+
         console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
         const data = await rest.put(

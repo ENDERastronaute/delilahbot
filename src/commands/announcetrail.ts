@@ -1,4 +1,21 @@
-import {CommandInteraction, GuildMemberRoleManager, PollAnswer, SlashCommandBuilder, TextChannel} from "discord.js";
+import {
+    ActionRowBuilder,
+    CommandInteraction,
+    GuildMemberRoleManager,
+    ModalActionRowComponentBuilder,
+    ModalBuilder,
+    PollAnswer,
+    SlashCommandBuilder,
+    TextChannel, TextInputBuilder,
+    TextInputStyle,
+} from "discord.js";
+import dayjs from "dayjs";
+import 'dayjs/locale/fr-ch.js'
+import updateLocale from "dayjs/plugin/updateLocale";
+
+dayjs.locale('fr-ch')
+
+dayjs.extend(updateLocale);
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -34,9 +51,19 @@ export const command = {
                     }
                 }
 
-                const date = new Date(interaction.options.get('date')?.value as string);
+                const date = dayjs(interaction.options.get('date')?.value as string);
 
-                const content = `Attention <@&1249309687237709884>! Une nouvelle randonnée à été organisée!\n\nElle se passera à ${selectedAnswer.text} le ${date.toLocaleString('fr-CH')}.`;
+                const days = [
+                    'Dimanche',
+                    'Lundi',
+                    'Mardi',
+                    'Mercredi',
+                    'Jeudi',
+                    'Vendredi',
+                    'Samedi',
+                ]
+
+                const content = `Attention <@&1249309687237709884>! Une nouvelle randonnée à été organisée!\n\nElle se passera à ${selectedAnswer.text} le ${days[date.day()]} ${date.date()} ${date.format('MMMM')} ${date.year()}.`;
 
                 await news_channel.send({content: content})
 
